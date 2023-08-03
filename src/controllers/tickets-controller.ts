@@ -44,3 +44,18 @@ export async function createTicket(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+export async function createTicketType(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+
+  const { name,price,isRemote,includesHotel } = req.body;
+
+  try {
+    const ticketTypes = await ticketService.postTicketTypes(name,price,isRemote,includesHotel);
+
+    return res.status(httpStatus.CREATED).send(ticketTypes);
+  } catch (error) {
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+}
+
+

@@ -12,6 +12,12 @@ async function getTicketTypes() {
   return ticketTypes;
 }
 
+async function postTicketTypes(name: string,price:number,isRemote:boolean,includesHotel:boolean) {
+  const ticketTypes = await ticketRepository.createTicketType(name,price,isRemote,includesHotel);
+
+  return ticketTypes;
+}
+
 async function getTicketByUserId(userId: number) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) {
@@ -45,6 +51,7 @@ async function createTicket(userId: number, ticketTypeId: number) {
 }
 
 const ticketService = {
+  postTicketTypes,
   getTicketTypes,
   getTicketByUserId,
   createTicket
