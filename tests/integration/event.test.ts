@@ -3,10 +3,15 @@ import httpStatus from "http-status";
 import supertest from "supertest";
 import { createEvent } from "../factories";
 import { cleanDb } from "../helpers";
+import { redis } from "@/config";
 
 beforeAll(async () => {
   await init();
   await cleanDb();
+});
+
+beforeEach(async () => {
+  await redis.flushall();
 });
 
 const server = supertest(app);
