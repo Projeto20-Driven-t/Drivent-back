@@ -12,8 +12,8 @@ async function getTicketTypes() {
   return ticketTypes;
 }
 
-async function postTicketTypes(name: string,price:number,isRemote:boolean,includesHotel:boolean) {
-  const ticketTypes = await ticketRepository.createTicketType(name,price,isRemote,includesHotel);
+async function postTicketTypes(name: string, price: number, isRemote: boolean, includesHotel: boolean) {
+  const ticketTypes = await ticketRepository.createTicketType(name, price, isRemote, includesHotel);
 
   return ticketTypes;
 }
