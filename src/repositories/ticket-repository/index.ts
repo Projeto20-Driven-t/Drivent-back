@@ -45,7 +45,7 @@ async function createTicket(ticket: CreateTicketParams) {
   });
 }
 
-async function createTicketType(name: string,price:number,isRemote:boolean,includesHotel:boolean) {
+async function createTicketType(name: string, price: number, isRemote: boolean, includesHotel: boolean) {
   return prisma.ticketType.create({
     data: {
       includesHotel,
