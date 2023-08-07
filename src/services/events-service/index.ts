@@ -15,7 +15,7 @@ async function getFromCacheOrDatabase(key: string, fetchFromDatabase: () => Prom
   try {
     const cachedData = await redisGetAsync(key);
 
-    if (cachedData) {
+    if (cachedData && cachedData!=='[]') {
       return JSON.parse(cachedData);
     } else {
       const dataFromDatabase = await fetchFromDatabase();
@@ -43,18 +43,22 @@ export async function getFirstEvent(): Promise<GetFirstEventResult> {
 export async function isCurrentEventActive(): Promise<boolean> {
   const cacheKey = 'currentEvent';
 
-  const isActive = await getFromCacheOrDatabase(cacheKey, async () => {
-    const event = await eventRepository.findFirst();
-    if (!event) return false;
+  try {
+    const isActive = await getFromCacheOrDatabase(cacheKey, async () => {
+      const event = await eventRepository.findFirst();
+      if (!event) return false;
 
-    const now = dayjs();
-    const eventStartsAt = dayjs(event.startsAt);
-    const eventEndsAt = dayjs(event.endsAt);
+      const now = dayjs();
+      const eventStartsAt = dayjs(event.startsAt);
+      const eventEndsAt = dayjs(event.endsAt);
 
-    return now.isAfter(eventStartsAt) && now.isBefore(eventEndsAt);
-  });
+      return now.isAfter(eventStartsAt) && now.isBefore(eventEndsAt);
+    });
 
-  return isActive;
+    return isActive;
+  } catch (error) {
+    throw new Error("Error checking event status");
+  }
 }
 
 const eventsService = {
