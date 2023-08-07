@@ -2,7 +2,7 @@ import { notFoundError } from "@/errors";
 import eventRepository from "@/repositories/event-repository";
 import { exclude } from "@/utils/prisma-utils";
 import { Event } from "@prisma/client";
-import { redis, DEFAULT_EXP } from "@/config";
+import { redis } from "@/config";
 import dayjs from 'dayjs';
 import util from 'util';
 
