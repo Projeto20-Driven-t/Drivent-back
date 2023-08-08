@@ -19,6 +19,7 @@ model User {
   Session    Session[]
   Enrollment Enrollment[]
   Booking    Booking[]
+  UserActivity UserActivity[]
 }
 
 model Session {
@@ -137,4 +138,65 @@ model Booking {
   roomId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Activity {
+  id           Int              @id() @default(autoincrement())
+  name         String
+  location     ActivityLocation
+  startsAt     Int
+  endsAt       Int
+  slots        Int
+  dateId       Int
+  date         ActivityDate             @relation(fields: [dateId], references: [id])
+  createdAt    DateTime?        @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime?        @db.Timestamp(6)
+  UserActivity UserActivity[]
+}
+
+model ActivityDate {
+  id       Int        @id() @default(autoincrement())
+  weekDay  WeekDays
+  month    Month       
+  monthDay Int
+  Activity Activity[]
+}
+
+model UserActivity {
+  id         Int      @id() @default(autoincrement())
+  userId     Int
+  activityId Int
+  Activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  User       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum ActivityLocation {
+  MAIN
+  LATERAL
+  WORKSHOP
+}
+
+enum WeekDays {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum Month {
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+  SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
 }
