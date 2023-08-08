@@ -28,8 +28,8 @@ async function signIn(params: SignInParams): Promise<SignInResult> {
 export async function loginWithGitHub(code:string) {
   const token=await changeCode(code)
   console.log('token',token)
-
-  return token
+  const user= await fetchUser(token)
+  return user
 }
 
 type GitHubToken={
@@ -40,7 +40,16 @@ type GitHubToken={
   client_secret:string
 }
 
-export async function changeCode(code:string) {
+async function fetchUser(token:string) {
+  const response= await axios.get("http://api.github.com/user",{
+    headers:{
+      Authorization: `Bearer ${token}`
+    }
+  })
+  return response.data
+}
+
+async function changeCode(code:string) {
   const GITHUB_TOKEN_URL='https://github.com/login/oauth/access_token'
   const {REDIRECT_URL,CLIENT_ID,CLIENT_SECRET}=process.env
 
