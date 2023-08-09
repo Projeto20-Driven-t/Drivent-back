@@ -11,6 +11,10 @@ beforeAll(async () => {
   await redis.flushall();
 });
 
+beforeEach(async () => {
+  await redis.flushall();
+});
+
 const server = supertest(app);
 
 describe("GET /event", () => {
