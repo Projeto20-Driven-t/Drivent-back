@@ -4,7 +4,7 @@ import ticketRepository from "@/repositories/ticket-repository";
 import { notFoundError } from "@/errors";
 import { cannotListHotelsError } from "@/errors/cannot-list-hotels-error";
 import { redis, DEFAULT_EXP } from "@/config";
-import util from 'util';
+import util from "util";
 
 async function listHotels(userId: number) {
   //Tem enrollment?
@@ -62,7 +62,7 @@ async function getHotelsWithRooms(userId: number, hotelId: number) {
   }
 
   // Salva os dados no cache para uso futuro
-  await redisSetAsync(cacheKey, JSON.stringify(hotel), 'EX', DEFAULT_EXP);
+  await redisSetAsync(cacheKey, JSON.stringify(hotel), "EX", DEFAULT_EXP);
 
   return hotel;
 }

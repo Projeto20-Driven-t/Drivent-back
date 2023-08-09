@@ -1,4 +1,4 @@
-import Redis from 'ioredis';
+import Redis from "ioredis";
 
 export const DEFAULT_EXP = 3600; //seconds
 
