@@ -1,5 +1,5 @@
-import { UserActivity } from '@prisma/client';
-import { prisma } from '@/config';
+import { UserActivity } from "@prisma/client";
+import { prisma } from "@/config";
 
 async function getActivities() {
   return prisma.activity.findMany();
@@ -9,7 +9,7 @@ async function getActivitiesDate() {
   return prisma.activityDate.findMany();
 }
 
-async function UserSelectActivity(data: Omit<UserActivity, 'id'>) {
+async function UserSelectActivity(data: Omit<UserActivity, "id">) {
   return prisma.userActivity.create({ data });
 }
 

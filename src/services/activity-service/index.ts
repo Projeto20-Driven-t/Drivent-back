@@ -1,5 +1,5 @@
-import { notFoundError } from '@/errors';
-import activitiesRepository from '@/repositories/activity-repository'
+import { notFoundError } from "@/errors";
+import activitiesRepository from "@/repositories/activity-repository";
 
 async function getActivities() {
   const activities = await activitiesRepository.getActivities();
@@ -18,18 +18,18 @@ async function getActivitiesDate() {
   const date = await activitiesRepository.getActivitiesDate();
   if (!date || date.length === 0) throw notFoundError();
   const month = [
-    'JANUARY',
-    'FEBRUARY',
-    'MARCH',
-    'APRIL',
-    'MAY',
-    'JUNE',
-    'JULY',
-    'AUGUST',
-    'SEPTEMBER',
-    'OCTOBER',
-    'NOVEMBER',
-    'DECEMBER',
+    "JANUARY",
+    "FEBRUARY",
+    "MARCH",
+    "APRIL",
+    "MAY",
+    "JUNE",
+    "JULY",
+    "AUGUST",
+    "SEPTEMBER",
+    "OCTOBER",
+    "NOVEMBER",
+    "DECEMBER",
   ];
   let d = 1;
   const dates = [];

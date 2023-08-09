@@ -3,19 +3,19 @@ import eventRepository from "@/repositories/event-repository";
 import { exclude } from "@/utils/prisma-utils";
 import { Event } from "@prisma/client";
 import { redis } from "@/config";
-import dayjs from 'dayjs';
-import util from 'util';
+import dayjs from "dayjs";
+import util from "util";
 
 const redisGetAsync = util.promisify(redis.get).bind(redis);
 const redisSetAsync = util.promisify(redis.set).bind(redis);
 
 export type GetFirstEventResult = Omit<Event, "createdAt" | "updatedAt">;
 
-async function getFromCacheOrDatabase(key: string, fetchFromDatabase: () => Promise<any>): Promise<any> {
+async function getFromCacheOrDatabase(key: string, fetchFromDatabase: ()=> Promise<any>): Promise<any> {
   try {
     const cachedData = await redisGetAsync(key);
 
-    if (cachedData && cachedData!=='[]') {
+    if (cachedData && cachedData!=="[]") {
       return JSON.parse(cachedData);
     } else {
       const dataFromDatabase = await fetchFromDatabase();
@@ -23,13 +23,13 @@ async function getFromCacheOrDatabase(key: string, fetchFromDatabase: () => Prom
       return dataFromDatabase;
     }
   } catch (error) {
-    console.error('Erro ao interagir com o Redis:', error);
+    console.error("Erro ao interagir com o Redis:", error);
     return fetchFromDatabase();
   }
 }
 
 export async function getFirstEvent(): Promise<GetFirstEventResult> {
-  const cacheKey = 'firstEvent';
+  const cacheKey = "firstEvent";
 
   const event = await getFromCacheOrDatabase(cacheKey, async () => {
     const eventFromDb = await eventRepository.findFirst();
@@ -41,7 +41,7 @@ export async function getFirstEvent(): Promise<GetFirstEventResult> {
 }
 
 export async function isCurrentEventActive(): Promise<boolean> {
-  const cacheKey = 'currentEvent';
+  const cacheKey = "currentEvent";
 
   try {
     const isActive = await getFromCacheOrDatabase(cacheKey, async () => {
