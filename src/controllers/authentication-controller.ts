@@ -14,13 +14,13 @@ export async function singInPost(req: Request, res: Response) {
 }
 
 export async function login(req: Request, res: Response) {
-  const {code}=req.body as {code:string} //joi
-  console.log(code)
+  const { code }=req.body as {code: string}; //joi
+  console.log(code);
   try {
-    const token=await loginWithGitHub(code)
-    console.log("token do github",token);
-    return res.status(httpStatus.OK).send({token});
+    const user=await loginWithGitHub(code);
+    // console.log("token do github",token);
+    return res.status(httpStatus.OK).send(user);
   } catch (error) {
-    return res.status(httpStatus.UNAUTHORIZED).send('Something went wrong with GitHub access');
+    return res.status(httpStatus.UNAUTHORIZED).send("Something went wrong with GitHub access");
   }
 }

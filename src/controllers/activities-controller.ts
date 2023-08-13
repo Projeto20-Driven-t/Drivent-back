@@ -26,3 +26,4 @@ export async function getUserSelections(req: AuthenticatedRequest, res: Response
   const select = await activitiesService.getUserSelections(userId);
   return res.status(httpStatus.OK).send(select);
 }
+  
