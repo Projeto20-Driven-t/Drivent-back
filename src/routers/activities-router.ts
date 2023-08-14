@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { getActivities, getActivitiesDate, getUserSelections, UserSelectActivity } from "@/controllers/activities-controller";
+import {
+  getActivities,
+  getActivitiesDate,
+  getUserSelections,
+  UserSelectActivity,
+} from "@/controllers/activities-controller";
 import { authenticateToken } from "@/middlewares";
 
 const activitiesRouter = Router();
