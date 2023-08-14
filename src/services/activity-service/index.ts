@@ -46,6 +46,7 @@ async function getActivitiesDate() {
 
 async function UserSelectActivity(userId: number, activityId: number) {
   const select = await activitiesRepository.UserSelectActivity({ userId, activityId });
+  await activitiesRepository.updateSlotsCount(activityId);
   return select;
 }
 

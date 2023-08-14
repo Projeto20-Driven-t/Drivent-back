@@ -1,31 +1,90 @@
-import { Hotel, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
-import hotels from "./hotels";
+import hotelsData from "./hotels";
 import { createRooms } from "./rooms";
+
 const prisma = new PrismaClient();
 
-async function createHotelsCache() {
+async function createActivitiesSeed() {
+  await prisma.activityDate.createMany({
+    data: [
+      {
+        weekDay: 'MONDAY',
+        month: 'JANUARY',
+        monthDay: 3,
+      },
+      {
+        weekDay: 'TUESDAY',
+        month: 'JANUARY',
+        monthDay: 4,
+      },
+    ],
+  });
+
+  await prisma.activity.createMany({
+    data: [
+      {
+        name: 'Minecraft: montando o Pc ideal',
+        location: 'LATERAL',
+        startsAt: 9,
+        endsAt: 10,   
+        slots: 20,
+        dateId: 1,  
+      },
+      {
+        name: 'LoL: montando o Pc ideal',
+        location: 'LATERAL',
+        startsAt: 10,
+        endsAt: 11,   
+        slots: 20,
+        dateId: 1,  
+      },
+      {
+        name: 'Palestra IA',
+        location: 'MAIN',
+        startsAt: 9,
+        endsAt: 11,   
+        slots: 20,
+        dateId: 2,  
+      },
+      {
+        name: 'Palestra X',
+        location: 'WORKSHOP',
+        startsAt: 9,
+        endsAt: 10,   
+        slots: 20,
+        dateId: 2,  
+      },
+      {
+        name: 'Palestra Y',
+        location: 'WORKSHOP',
+        startsAt: 10,
+        endsAt: 11,   
+        slots: 20,
+        dateId: 2,  
+      },
+    ],
+  });
+}
+
+async function createHotelsAndRooms() {
   try {
     await prisma.hotel.createMany({
-      data: [
-        {
-          name: "Hotel TesteCache 1",
-          image: "https://www.ahstatic.com/photos/c096_ho_00_p_1024x768.jpg",
-        },
-        {
-          name: "Hotel TesteCache 2",
-          image: "https://www.ahstatic.com/photos/1276_ho_00_p_1024x768.jpg",
-        },
-      ],
+      data: hotelsData,
     });
-
     console.log("Hotéis criados com sucesso!");
+
+    const hotelsList = await prisma.hotel.findMany();
+    for (const hotel of hotelsList) {
+      await createRooms(hotel.id);
+    }
+    console.log("Quartos criados com sucesso!");
   } catch (error) {
-    console.error("Erro ao criar hotéis:", error);
+    console.error("Erro ao criar hotéis e quartos:", error);
   }
 }
 
-async function main() {
+async function createEvent() {
   let event = await prisma.event.findFirst();
   if (!event) {
     event = await prisma.event.create({
@@ -38,63 +97,18 @@ async function main() {
       },
     });
   }
-
   console.log({ event });
-  await createHotelsCache();
-}
-type CreateManyHotels = {
-  name: string;
-  image: string;
-}
-async function hotelsSeed() {
-  for(let hotel of hotels) {
-    await prisma.hotel.create({
-      data: hotel
-    })
-  }
 }
 
-async function RoomsSeed() {
-  const hotels = await prisma.hotel.findMany({});
-  if(!hotels) {
-    await prisma.hotel.createMany({
-      data: [
-        {
-          name: "Driven Resort",
-          image: "https://ibb.co/WDC4D4h",
-        },
-        {
-          name: "Driven Palace",
-          image: "https://ibb.co/vQtR9Dd",
-        },
-        {
-          name: "Driven World",
-          image: "https://ibb.co/g9GJ2Xy"
-        },
-      ]
-    })
-  }
+async function main() {
+  await createEvent();
+  await createHotelsAndRooms();
+  await createActivitiesSeed();
+
+  await prisma.$disconnect();
 }
 
-main()
-hotelsSeed()
-async function getHotelsList(): Promise<Hotel[]> {
-  return await prisma.hotel.findMany()
-}
-
-async function roomsSeed(){
-  const hotelsList = await getHotelsList()
-  for(let hotel of hotelsList) {
-    await createRooms(hotel.id);
-  }
-}
-
-roomsSeed()
-
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
